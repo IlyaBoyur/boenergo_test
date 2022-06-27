@@ -1,0 +1,6 @@
+# Python paths
+/venv/
+__pycache__/
+
+# Local database
+*.sqlite3
