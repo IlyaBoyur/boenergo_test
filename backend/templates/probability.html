@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+
+{% block jquery_script %}
+<script>
+  $(document).ready(function(){
+
+    // Add collapse to all tags hiden and showed by select `itemSelect`
+    $(".item_hide").addClass("collapse");
+  
+    // Hide all divs linked to select `itemSelect` 
+    // and show only linked to selected option
+    $("#itemSelect").change(function(){
+      // Dave in a variable the wanted div
+      var selector = ".item_" + $(this).val();
+      // Hide all elements
+      $(".item_hide").collapse("hide");
+      // Show only element connected to selected option
+      $(selector).collapse("show");
+    });
+    
+    // Disable button if reveal is not applicable
+    // (read selected item: is it revealed or not)
+    $("#itemSelect").change(function(){
+      const number = $(this).val()
+      if (number != 'choice') {
+        const is_revealed = JSON.parse(
+          document.getElementById('items-data').textContent
+        )[Number(number)].is_revealed;
+        if (is_revealed) {
+          $("#itemRevealBtn").prop('disabled', true);
+        } else {
+          $("#itemRevealBtn").prop('disabled', false);
+        }
+      }
+      
+    });
+
+  });
+</script>
+{{ items|json_script:"items-data" }}
+{% endblock %}
+
+{% block title %}БО Энерго: Вероятность{% endblock %}
+
+{% block content %}
+
+  <div class="card my-md-5">
+
+    <div class="card-body m-md-3">
+
+      <h3 class="card-title">Второе задание: угадай цвет</h3>
+
+      <div class="card-text">
+        <form method="POST">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="itemSelect">Выберите номер предмета</label>
+
+            <select class="form-control" id="itemSelect" 
+            aria-describedby="itemHelp" name='selected_item'>
+              <option value="choice">-- Выберите номер предмета --</option>
+              <!-- Список предметов -->
+              {% for item in items %}
+                <option value="{{ item.id }}">{{ item.id }}</option>
+              {% endfor %}
+            </select>
+
+            {% for item in items %}
+              <label class="form-text item_hide item_{{ item.id }} my-3">
+                {% if item.is_revealed %}
+                  Цвет предмета №{{ item.id }} уже известен:
+                  <button type="button" class="btn"
+                  style="background: {{ item.actual }};" disabled>
+                  </button>
+                  {% else %}
+                  Цвет предмета №{{ item.id }} неизвестен. Думаю, это 
+                  <button type="button" class="btn"
+                  style="background: {{ item.guess }};" disabled>
+                  </button> !
+                {% endif %}
+              </label>
+            {% endfor %}
+
+          </div><!-- form-group -->
+
+          <button type="submit" class="btn btn-primary my-1" name="reveal"
+          id="itemRevealBtn">
+            Проверить цвет
+          </button>
+          <button type="submit" class="btn btn-primary my-1" name="randomize"
+          id="itemClearBtn">
+            Сбросить цвета
+          </button>
+          <button type="button" class="btn btn-primary my-1" data-toggle="collapse"
+          data-target="#itemsCounts" aria-expanded="{{ show_counts }}" aria-controls="itemsCounts"
+          name="show_counts">
+            Показать общее число предметов
+          </button>
+          <div class="collapse" id="itemsCounts">
+            <div class="card card-body my-2">
+              <div class="row text-center p-2">
+                <h2 class="p-2"><span class="badge badge-danger">{{ red }}</span></h2>
+                <h2 class="p-2"><span class="badge badge-success">{{ green }}</span></h2>
+                <h2 class="p-2"><span class="badge badge-primary">{{ blue }}</span></h2>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div><!-- card-text -->
+
+    </div><!-- card-body -->
+
+  </div><!-- card -->
+
+{% endblock %}<!-- content -->

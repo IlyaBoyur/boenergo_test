@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .utils import calculate_square_roots
+from .utils import calculate_square_roots, generate_random_number, generate_random_places, update_items, randomize_items, get_items, get_items_counts
 from .forms import SquareRootsForm
 
 
@@ -25,3 +25,18 @@ def square_roots(request):
     }
     return render(request, 'square_roots.html', context)
 
+
+def probability(request):
+    if 'reveal' in request.POST:
+        update_items(int(request.POST['selected_item']))
+    elif 'randomize' in request.POST:
+        randomize_items()
+    blue, green, red = get_items_counts()
+    context = {
+        'red': red,
+        'green': green,
+        'blue': blue,
+        'items': get_items(),
+        'show_counts': True if 'show_counts' in request.POST else False,
+    }
+    return render(request, 'probability.html', context)
