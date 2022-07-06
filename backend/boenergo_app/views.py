@@ -1,3 +1,27 @@
 from django.shortcuts import render
 
-# Create your views here.
+from .utils import calculate_square_roots
+from .forms import SquareRootsForm
+
+
+def index(request):
+    return render(request, 'index.html')
+
+
+def square_roots(request):
+    form = SquareRootsForm(request.POST or None)
+    if not form.is_valid():
+        return render(request, 'square_roots.html', {'form': form})
+    first, second = calculate_square_roots(form.cleaned_data['first'],
+                                           form.cleaned_data['second'],
+                                           form.cleaned_data['free'])
+    context = {
+        'form': form,
+        'imaginary': form.cleaned_data['imaginary_roots'],
+        'root_first': str(first).strip('()'),
+        'root_second': str(second).strip('()'),
+        'roots_are_equal': first == second,
+        'roots_are_imaginary': isinstance(first, complex),
+    }
+    return render(request, 'square_roots.html', context)
+
