@@ -1,0 +1,30 @@
+<!-- Вертикальное меню -->
+<nav class="navbar navbar-expand-md navbar-light flex-md-column">
+  
+  <a class="navbar-brand text-wrap" href="{% url 'index' %}">
+    Тестовые задания Python-программисту
+  </a>
+
+  <button class="navbar-toggler" type="button" data-toggle="collapse"
+  data-target="#topnavbar" aria-controls="topnavbar"
+  aria-expanded="false" aria-label="Toggle navigation">
+  <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="topnavbar">
+    <!-- Пункты вертикального меню -->
+    <ul class="navbar-nav flex-column">
+      <li class="nav-item">
+      <a class="nav-link" href="{% url 'square_roots' %}">
+        Корни квадратного уравнения
+      </a>
+      </li>
+      <li class="nav-item">
+      <a class="nav-link" href="{% url 'probability' %}">
+        Угадай цвет
+      </a>
+      </li>
+    </ul>
+  </div>
+
+</nav>
