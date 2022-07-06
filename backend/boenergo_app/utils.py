@@ -2,8 +2,11 @@ from cmath import sqrt as sqrt_imaginary
 from math import sqrt
 from typing import Tuple, Union, List, Dict
 from datetime import datetime
-import random
-from .models import items, items_counts, BLUE, GREEN, RED
+# How many items overall
+ITEMS_COUNT = 100
+# How many times more blues than greens
+TIMES_BLUES_MORE_GREENS = 5
+
 
 Item = Dict[str, Union[int, bool, str]]
 
@@ -76,11 +79,11 @@ def create_items() -> Tuple[int, int, int, List[Item]]:
     """Create and shuffle new items"""
     new_items = list(
         {'id': i, 'is_revealed': False, 'guess': BLUE, 'actual': BLUE, }
-        for i in range(0, 100)
+        for i in range(ITEMS_COUNT)
     )
 
     blue, green, red = randomize_colors()
-    places = generate_random_places(0, 99, 100)
+    places = generate_random_places(0, ITEMS_COUNT-1, ITEMS_COUNT)
     for _ in range(red):
         new_items[places.pop()]['actual'] = RED
     for _ in range(green):
@@ -90,7 +93,8 @@ def create_items() -> Tuple[int, int, int, List[Item]]:
     return blue, green, red, new_items
 
 
-def randomize_colors(times=5, all=100):
+def randomize_colors(times=TIMES_BLUES_MORE_GREENS,
+                     all=ITEMS_COUNT):
     """
     1) Find out red_min and red_max:
     red_min = 1
