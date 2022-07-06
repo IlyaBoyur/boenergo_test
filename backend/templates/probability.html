@@ -22,7 +22,9 @@
     // (read selected item: is it revealed or not)
     $("#itemSelect").change(function(){
       const number = $(this).val()
-      if (number != 'choice') {
+      if (number == 'choice') {
+        $("#itemRevealBtn").prop('disabled', true);
+      } else {
         const is_revealed = JSON.parse(
           document.getElementById('items-data').textContent
         )[Number(number)].is_revealed;
@@ -32,7 +34,6 @@
           $("#itemRevealBtn").prop('disabled', false);
         }
       }
-      
     });
 
   });
