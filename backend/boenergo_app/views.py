@@ -30,12 +30,14 @@ def square_roots(request):
 
 
 def probability(request):
-    if 'reveal' in request.POST:
-        update_items(int(request.POST['selected_item']))
-    elif 'randomize' in request.POST:
+    form = ItemsForm(request.POST or None)
+    if form.is_valid():
+        update_items(int(form.cleaned_data['selected_item']))
+    if 'randomize' in request.POST:
         randomize_items()
     blue, green, red = get_items_counts()
     context = {
+        'form': form,
         'red': red,
         'green': green,
         'blue': blue,
