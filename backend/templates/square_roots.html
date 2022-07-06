@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}БО Энерго: Корни{% endblock %}
+
+{% block content %}
+
+  <div class="card my-md-5">
+
+    <div class="card-body m-md-3">
+
+      <div class="card-title">
+        <h3>Первое задание: корни квадратного уравнения</dh3>
+      </div>
+
+      <div class="card-text">
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <!-- Square roots input -->
+          <div class="my-md-3">
+            {% include "square_roots_input.html" %}
+          </div>
+
+          <!-- Checkbox -->
+          <div class="my-md-3">
+            <div class="custom-control custom-checkbox">
+              <input name="imaginary_roots" class="custom-control-input" type="checkbox" value="True" id="imaginary">
+              <label class="custom-control-label" for="imaginary">
+                Считать мнимые корни
+              </label>
+            </div>
+          </div>
+
+          <input type="submit" class="btn btn-primary" value="Рассчитать">
+
+        </form>
+      </div><!-- card-text -->
+
+    </div><!-- card-body -->
+
+  </div>  <!-- card -->
+
+  {% if root_first or form.errors %}
+    <div class="card my-5 border-0">
+      <div class="card-body m-0 p-0">
+
+        {% if form.errors %}
+          <div class="alert alert-danger" role="alert">
+            Пожалуйста, проверьте коэффициенты в уравнении
+          </div>
+        {% elif not imaginary and roots_are_imaginary %}
+          <div class="alert alert-warning" role="alert">
+            Получились комплексные корни уравнения
+          </div>
+        {% else %}
+          <div class="alert alert-success" role="alert">
+            {% if roots_are_equal %}
+              Корень уравнения: {{ root_first }}
+            {% else %}
+              Корни уравнения: {{ root_first }}, {{ root_second }}
+            {% endif %}
+          </div>
+        {% endif %}
+
+      </div><!-- card-body -->
+    </div><!-- card -->
+  {% endif %}
+
+{% endblock %}<!-- content -->
