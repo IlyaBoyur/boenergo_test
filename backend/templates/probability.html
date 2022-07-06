@@ -85,18 +85,26 @@
 
           </div><!-- form-group -->
 
-          <button type="submit" class="btn btn-primary my-1" name="reveal"
-          id="itemRevealBtn">
+          <button type="submit" class="btn btn-primary my-1" name="reveal" value=True
+          id="itemRevealBtn" data-toggle="tooltip" data-placement="top"
+          title="Нажмите, чтобы открыть цвет предмета"
+          data-delay='{"show":"1000"}' disabled>
             Проверить цвет
           </button>
-          <button type="submit" class="btn btn-primary my-1" name="randomize"
-          id="itemClearBtn">
+          <button type="submit" class="btn btn-primary my-1" name="randomize" value=True
+          id="itemClearBtn" data-toggle="tooltip" data-placement="top"
+          title="Нажмите, чтобы обновить число предметов и их цвета"
+          data-delay='{"show":"1000"}'>
             Сбросить цвета
           </button>
           <button type="button" class="btn btn-primary my-1" data-toggle="collapse"
-          data-target="#itemsCounts" aria-expanded="{{ show_counts }}" aria-controls="itemsCounts"
-          name="show_counts">
-            Показать общее число предметов
+          data-target="#itemsCounts" aria-expanded="{{ show_counts }}"
+          aria-controls="itemsCounts" name="show_counts">
+            <div data-toggle="tooltip" data-placement="top"
+            title="Нажмите, чтобы показать общее число предметов и их цвета"
+            data-delay='{"show":"1000"}'>
+              Все предметы
+            </div>
           </button>
           <div class="collapse" id="itemsCounts">
             <div class="card card-body my-2">
