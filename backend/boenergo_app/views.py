@@ -1,10 +1,8 @@
 from django.shortcuts import render
 
-from .utils import (
-    calculate_square_roots, update_items, randomize_items, get_items,
-    get_items_counts
-)
 from .forms import ItemsForm, SquareRootsForm
+from .utils import (calculate_square_roots, get_items, get_items_counts,
+                    randomize_items, update_items)
 
 
 def index(request):

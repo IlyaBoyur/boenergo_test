@@ -1,7 +1,12 @@
+import random
+
 from cmath import sqrt as sqrt_imaginary
-from math import sqrt
-from typing import Tuple, Union, List, Dict
 from datetime import datetime
+from math import sqrt
+from typing import Dict, List, Tuple, Union
+
+from .models import BLUE, GREEN, RED, items, items_counts
+
 # How many items overall
 ITEMS_COUNT = 100
 # How many times more blues than greens
