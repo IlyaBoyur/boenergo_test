@@ -57,15 +57,16 @@
           <div class="form-group">
             <label for="itemSelect">Выберите номер предмета</label>
 
+            <!-- Список предметов -->
             <select class="form-control" id="itemSelect" 
             aria-describedby="itemHelp" name='selected_item'>
               <option value="choice">-- Выберите номер предмета --</option>
-              <!-- Список предметов -->
               {% for item in items %}
                 <option value="{{ item.id }}">{{ item.id }}</option>
               {% endfor %}
             </select>
 
+            <!-- Описания предметов (скрыто) -->
             {% for item in items %}
               <label class="form-text item_hide item_{{ item.id }} my-3">
                 {% if item.is_revealed %}
