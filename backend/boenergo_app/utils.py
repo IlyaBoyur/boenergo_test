@@ -24,7 +24,7 @@ def calculate_square_roots(a: float, b: float, c: float) -> Union[
 
 def generate_random_number(min: int, max: int) -> int:
     """Generate a random number
-    
+
     min - lowest posible value
     max - highest posible value
     """
@@ -34,7 +34,7 @@ def generate_random_number(min: int, max: int) -> int:
 
 def generate_random_places(min: int, max: int, count: int) -> List[int]:
     """Generate a list of random non-repeating indices
-    
+
     min - lowest index value
     max - highest index value
     count - number of indices
@@ -43,7 +43,7 @@ def generate_random_places(min: int, max: int, count: int) -> List[int]:
     return random.sample(range(min, max + 1), count)
 
 
-def get_items() -> List[ Item ]:
+def get_items() -> List[Item]:
     """Return items or create new"""
     global items, items_counts
     if not items:
@@ -72,10 +72,10 @@ def randomize_items() -> None:
     items_counts = blue, green, red
 
 
-def create_items() -> Tuple[int, int, int, List[ Item ]]:
+def create_items() -> Tuple[int, int, int, List[Item]]:
     """Create and shuffle new items"""
     new_items = list(
-        {'id': i, 'is_revealed': False, 'guess': BLUE, 'actual': BLUE,}
+        {'id': i, 'is_revealed': False, 'guess': BLUE, 'actual': BLUE, }
         for i in range(0, 100)
     )
 
@@ -106,5 +106,5 @@ def randomize_colors(times=5, all=100):
     red_max = (all - (times + 1)) // (times + 2)
     red = generate_random_number(1, red_max)
     green = (all - red) // (times + 1)
-    blue = all - green - red    
+    blue = all - green - red
     return blue, green, red

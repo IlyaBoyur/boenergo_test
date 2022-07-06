@@ -11,4 +11,4 @@ from boenergo_app.utils import calculate_square_roots
      [5, 2, 1, (-0.2+0.4j, -0.2-0.4j,)],)
 )
 def test_calculate_square_roots(a, b, c, expected):
-    assert calculate_square_roots(a,b,c) == expected
+    assert calculate_square_roots(a, b, c) == expected
