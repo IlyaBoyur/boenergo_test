@@ -5,7 +5,9 @@ from datetime import datetime
 from math import sqrt
 from typing import Dict, List, Tuple, Union
 
-from .models import BLUE, GREEN, RED, items, items_counts
+from django.core.cache import cache
+
+from .models import BLUE, GREEN, RED, items
 
 # How many items overall
 ITEMS_COUNT = 100
@@ -53,20 +55,26 @@ def generate_random_places(min: int, max: int, count: int) -> List[int]:
 
 def get_items() -> List[Item]:
     """Return items or create new"""
-    global items, items_counts
+    global items
     if not items:
-        blue, green, red, items = create_items()
-        items_counts = blue, green, red
+        *_, items = create_items()
     return items
 
 
 def get_items_counts() -> Tuple[int, int, int]:
     """Return item counts or create new"""
-    global items, items_counts
-    if not items_counts:
-        blue, green, red, items = create_items()
-        items_counts = blue, green, red
-    return items_counts
+    if cache.get('items_counts') is not None:
+        return cache.get('items_counts')
+    blue, green, red = 0, 0, 0
+    for item in get_items():
+        if item['actual'] == RED:
+            red += 1
+        if item['actual'] == GREEN:
+            green += 1
+        if item['actual'] == BLUE:
+            blue += 1
+    cache.set('items_counts', (blue, green, red,))
+    return blue, green, red
 
 
 def update_items(index: int) -> None:
@@ -75,9 +83,9 @@ def update_items(index: int) -> None:
 
 def randomize_items() -> None:
     """Create and shuffle new items"""
-    global items, items_counts
+    global items
     blue, green, red, items = create_items()
-    items_counts = blue, green, red
+    cache.set('items_counts', (blue, green, red,))
 
 
 def create_items() -> Tuple[int, int, int, List[Item]]:
