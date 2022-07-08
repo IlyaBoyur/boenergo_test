@@ -1,21 +1,18 @@
 import random
-
 from cmath import sqrt as sqrt_imaginary
 from datetime import datetime
 from math import sqrt
-from typing import Dict, List, Tuple, Union
+from typing import List, Tuple, Union
 
 from django.core.cache import cache
+from django.shortcuts import get_object_or_404
 
-from .models import BLUE, GREEN, RED, items
+from .models import BLUE, GREEN, RED, Item
 
 # How many items overall
 ITEMS_COUNT = 100
 # How many times more blues than greens
 TIMES_BLUES_MORE_GREENS = 5
-
-
-Item = Dict[str, Union[int, bool, str]]
 
 
 def calculate_square_roots(a: float, b: float, c: float) -> Union[
@@ -53,9 +50,9 @@ def generate_random_places(min: int, max: int, count: int) -> List[int]:
     return random.sample(range(min, max + 1), count)
 
 
-def get_items() -> List[Item]:
+def get_items():
     """Return items or create new"""
-    global items
+    items = Item.objects.all().order_by('number')[:ITEMS_COUNT]
     if not items:
         *_, items = create_items()
     return items
@@ -67,47 +64,51 @@ def get_items_counts() -> Tuple[int, int, int]:
         return cache.get('items_counts')
     blue, green, red = 0, 0, 0
     for item in get_items():
-        if item['actual'] == RED:
+        if item.color_actual == RED:
             red += 1
-        if item['actual'] == GREEN:
+        if item.color_actual == GREEN:
             green += 1
-        if item['actual'] == BLUE:
+        if item.color_actual == BLUE:
             blue += 1
     cache.set('items_counts', (blue, green, red,))
     return blue, green, red
 
 
 def update_items(index: int) -> None:
-    get_items()[index]['is_revealed'] = True
+    item = get_object_or_404(Item, number=index)
+    item.is_revealed = True
+    item.save()
 
 
 def randomize_items() -> None:
     """Create and shuffle new items"""
-    global items
-    blue, green, red, items = create_items()
+    Item.objects.all().delete()
+    blue, green, red, *_ = create_items()
     cache.set('items_counts', (blue, green, red,))
 
 
 def create_items() -> Tuple[int, int, int, List[Item]]:
     """Create and shuffle new items"""
-    new_items = list(
-        {'id': i, 'is_revealed': False, 'guess': BLUE, 'actual': BLUE, }
-        for i in range(ITEMS_COUNT)
-    )
-
-    blue, green, red = randomize_colors()
+    blue, green, red = randomize_colors(all=ITEMS_COUNT)
     places = generate_random_places(0, ITEMS_COUNT-1, ITEMS_COUNT)
-    for _ in range(red):
-        new_items[places.pop()]['actual'] = RED
-    for _ in range(green):
-        new_items[places.pop()]['actual'] = GREEN
-    for _ in range(blue):
-        new_items[places.pop()]['actual'] = BLUE
-    return blue, green, red, new_items
+
+    blues = [
+        Item(number=places.pop(), is_revealed=False, color_guess=BLUE, color_actual=BLUE)
+        for _ in range(blue)
+    ]
+    greens = [
+        Item(number=places.pop(), is_revealed=False, color_guess=GREEN, color_actual=GREEN)
+        for _ in range(green)
+    ]
+    reds = [
+        Item(number=places.pop(), is_revealed=False, color_guess=RED, color_actual=RED)
+        for _ in range(red)
+    ]
+    return blue, green, red, Item.objects.bulk_create([*blues, *greens, *reds])
 
 
-def randomize_colors(times=TIMES_BLUES_MORE_GREENS,
-                     all=ITEMS_COUNT):
+def randomize_colors(times: int=TIMES_BLUES_MORE_GREENS,
+                     all: int=ITEMS_COUNT):
     """
     1) Find out red_min and red_max:
     red_min = 1

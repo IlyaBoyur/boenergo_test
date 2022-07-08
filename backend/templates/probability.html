@@ -25,9 +25,8 @@
       if (number == 'choice') {
         $("#itemRevealBtn").prop('disabled', true);
       } else {
-        const is_revealed = JSON.parse(
-          document.getElementById('items-data').textContent
-        )[Number(number)].is_revealed;
+        var item_label = $(".item_" + number).text();
+        is_revealed = item_label.trim().split(" ")[3] == "известен:";
         if (is_revealed) {
           $("#itemRevealBtn").prop('disabled', true);
         } else {
@@ -38,7 +37,6 @@
 
   });
 </script>
-{{ items|json_script:"items-data" }}
 {% endblock %}
 
 {% block title %}БО Энерго: Вероятность{% endblock %}
@@ -63,23 +61,23 @@
             aria-describedby="itemHelp" name='selected_item'>
               <option value="choice">-- Выберите номер предмета --</option>
               {% for item in items %}
-                <option value="{{ item.id }}">{{ item.id }}</option>
+                <option value="{{ item.number }}">{{ item.number }}</option>
               {% endfor %}
             </select>
 
             <!-- Описания предметов (скрыто) -->
             {% load user_filters %}
             {% for item in items %}
-              <label class="form-text item_hide item_{{ item.id }} my-3">
+              <label class="form-text item_hide item_{{ item.number }} my-3">
                 {% if item.is_revealed %}
-                  Цвет предмета №{{ item.id }} уже известен:
+                  Цвет предмета №{{ item.number }} известен:
                   <button type="button" class="btn"
-                  style="background: {{ item.actual }};" disabled>
+                  style="background: {{ item.color_actual | int_2_color }} ;" disabled>
                   </button>
                   {% else %}
-                  Цвет предмета №{{ item.id }} неизвестен. Думаю, это 
+                  Цвет предмета №{{ item.number }} неизвестен. Думаю, это 
                   <button type="button" class="btn"
-                  style="background: {{ item.guess }};" disabled>
+                  style="background: {{ item.color_guess | int_2_color }} ;" disabled>
                   </button> !
                 {% endif %}
               </label>
@@ -123,5 +121,5 @@
     </div><!-- card-body -->
 
   </div><!-- card -->
-
+  <div class="card card-body card-header" id="testID"></div>
 {% endblock %}<!-- content -->

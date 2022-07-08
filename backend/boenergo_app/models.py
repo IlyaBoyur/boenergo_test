@@ -1,11 +1,11 @@
-items = None
-
-BLUE = 'rgb(18, 121, 255)'
-GREEN = 'rgb(28, 129, 28)'
-RED = 'rgb(255, 18, 69)'
-
 from django.core import validators
 from django.db import models
+
+# Item colors
+BLUE = 0x1279FF
+GREEN = 0x1C811C
+RED = 0xFF1245
+
 
 class Item(models.Model):
     number = models.PositiveSmallIntegerField(
