@@ -68,6 +68,7 @@
             </select>
 
             <!-- Описания предметов (скрыто) -->
+            {% load user_filters %}
             {% for item in items %}
               <label class="form-text item_hide item_{{ item.id }} my-3">
                 {% if item.is_revealed %}
