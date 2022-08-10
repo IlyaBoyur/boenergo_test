@@ -93,22 +93,31 @@ def create_items() -> Tuple[int, int, int, List[Item]]:
     places = generate_random_places(0, ITEMS_COUNT-1, ITEMS_COUNT)
 
     blues = [
-        Item(number=places.pop(), is_revealed=False, color_guess=BLUE, color_actual=BLUE)
+        Item(number=places.pop(),
+             is_revealed=False,
+             color_guess=BLUE,
+             color_actual=BLUE)
         for _ in range(blue)
     ]
     greens = [
-        Item(number=places.pop(), is_revealed=False, color_guess=GREEN, color_actual=GREEN)
+        Item(number=places.pop(),
+             is_revealed=False,
+             color_guess=GREEN,
+             color_actual=GREEN)
         for _ in range(green)
     ]
     reds = [
-        Item(number=places.pop(), is_revealed=False, color_guess=RED, color_actual=RED)
+        Item(number=places.pop(),
+             is_revealed=False,
+             color_guess=RED,
+             color_actual=RED)
         for _ in range(red)
     ]
     return blue, green, red, Item.objects.bulk_create([*blues, *greens, *reds])
 
 
-def randomize_colors(times: int=TIMES_BLUES_MORE_GREENS,
-                     all: int=ITEMS_COUNT):
+def randomize_colors(times: int = TIMES_BLUES_MORE_GREENS,
+                     all: int = ITEMS_COUNT):
     """
     1) Find out red_min and red_max:
     red_min = 1
