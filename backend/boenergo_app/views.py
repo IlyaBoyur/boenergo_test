@@ -1,8 +1,7 @@
 from django.shortcuts import render
 
 from .forms import ItemsForm, SquareRootsForm
-from .utils import (calculate_square_roots, get_items, get_items_counts,
-                    randomize_items, update_items)
+from .utils import calculate_square_roots, ItemsManager
 
 
 def index(request):
@@ -30,16 +29,18 @@ def square_roots(request):
 def probability(request):
     form = ItemsForm(request.POST or None)
     if form.is_valid():
-        update_items(int(form.cleaned_data['selected_item']))
+        ItemsManager.instance().reveal_item(
+            int(form.cleaned_data['selected_item'])
+        )
     if 'randomize' in request.POST:
-        randomize_items()
-    blue, green, red = get_items_counts()
+        ItemsManager.instance().randomize_items()
+    blue, green, red = ItemsManager.instance().get_items_counts()
     context = {
         'form': form,
         'red': red,
         'green': green,
         'blue': blue,
-        'items': get_items(),
+        'items': ItemsManager.instance().get_items(),
         'show_counts': True if 'show_counts' in request.POST else False,
     }
     return render(request, 'probability.html', context)
